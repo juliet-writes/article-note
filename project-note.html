@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>기사 프로젝트 노트</title>
+<style>
+  :root{
+    --bg:#faf7f2; --card:#ffffff; --ink:#2b2622; --muted:#8a8178;
+    --line:#e8e0d5; --accent:#a0553c; --accent-soft:#f4e6df;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+    line-height:1.7; -webkit-text-size-adjust:100%;
+  }
+  main{max-width:680px; margin:0 auto; padding:24px 16px 56px}
+  header{margin-bottom:20px}
+  header h1{margin:0 0 4px; font-size:1.5rem; letter-spacing:-.02em}
+  header .by{margin:0; color:var(--muted); font-size:.9rem}
+  section{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px; margin-bottom:14px;
+  }
+  h2{margin:0 0 8px; font-size:.82rem; font-weight:700; color:var(--accent); letter-spacing:.04em}
+  .field{
+    min-height:1.7em; padding:2px 0; outline:none; word-break:break-word;
+  }
+  .field:empty::before{content:attr(data-ph); color:#b9afa3}
+  .field:focus{background:var(--accent-soft); border-radius:6px}
+  .angle{margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); color:var(--muted)}
+  .angle b{color:var(--ink)}
+  ul.todo{list-style:none; margin:0; padding:0}
+  ul.todo li{display:flex; gap:10px; align-items:flex-start; padding:6px 0; border-bottom:1px solid var(--line)}
+  ul.todo li:last-child{border-bottom:0}
+  ul.todo input{width:20px; height:20px; margin-top:5px; accent-color:var(--accent); flex:none}
+  ul.todo .field{flex:1}
+  ul.todo input:checked + .field{color:var(--muted); text-decoration:line-through}
+  .entry{padding:8px 0; border-bottom:1px solid var(--line)}
+  .entry:last-child{border-bottom:0}
+  .entry .date{font-weight:700; font-size:.9rem; margin-bottom:2px}
+  button{
+    margin-top:10px; font:inherit; font-size:.9rem; color:var(--accent);
+    background:var(--accent-soft); border:0; border-radius:8px; padding:8px 14px; cursor:pointer;
+  }
+  @media (min-width:600px){ main{padding-top:40px} header h1{font-size:1.8rem} }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>기사 프로젝트 노트</h1>
+    <p class="by">juliet-writes</p>
+  </header>
+
+  <section>
+    <h2>프로젝트 한 줄</h2>
+    <div class="field" contenteditable="true" data-key="brief" data-ph="브리프 한 줄을 입력하세요"></div>
+  </section>
+
+  <section>
+    <h2>팀 이름과 역할</h2>
+    <div class="field" contenteditable="true" data-key="team" data-ph="팀 이름 / 내 역할"></div>
+  </section>
+
+  <section>
+    <h2>주제</h2>
+    <div class="field" contenteditable="true" data-key="topic" data-ph="배정받은 대주제를 입력하세요"></div>
+    <div class="angle"><b>내 앵글:</b> 내일 정함</div>
+  </section>
+
+  <section>
+    <h2>할 일 체크리스트</h2>
+    <ul class="todo">
+      <li><input type="checkbox" data-key="c1"><div class="field" contenteditable="true" data-key="t1" data-ph="할 일 1"></div></li>
+      <li><input type="checkbox" data-key="c2"><div class="field" contenteditable="true" data-key="t2" data-ph="할 일 2"></div></li>
+      <li><input type="checkbox" data-key="c3"><div class="field" contenteditable="true" data-key="t3" data-ph="할 일 3"></div></li>
+      <li><input type="checkbox" data-key="c4"><div class="field" contenteditable="true" data-key="t4" data-ph="할 일 4"></div></li>
+      <li><input type="checkbox" data-key="c5"><div class="field" contenteditable="true" data-key="t5" data-ph="할 일 5"></div></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>날짜별 기록</h2>
+    <div id="log">
+      <div class="entry">
+        <div class="date">11/18</div>
+        <div class="field" contenteditable="true" data-key="log-1118" data-ph="오늘 한 줄"></div>
+      </div>
+    </div>
+    <button type="button" id="add">+ 날짜 추가</button>
+  </section>
+</main>
+
+<script>
+(function(){
+  var P = 'projectnote:';
+  function get(k){ try{ return localStorage.getItem(P+k); }catch(e){ return null; } }
+  function set(k,v){ try{ localStorage.setItem(P+k,v); }catch(e){} }
+
+  // 추가된 날짜 칸 복원
+  var log = document.getElementById('log');
+  var extra = parseInt(get('extra')||'0',10)||0;
+  for(var i=1;i<=extra;i++) addEntry(i, false);
+
+  function addEntry(n, save){
+    var d = document.createElement('div'); d.className='entry';
+    d.innerHTML = '<div class="date field" contenteditable="true" data-key="xd'+n+'" data-ph="날짜 (예: 11/19)"></div>'
+                + '<div class="field" contenteditable="true" data-key="xl'+n+'" data-ph="한 줄 기록"></div>';
+    log.appendChild(d);
+    restore(d);
+    if(save) set('extra', String(n));
+  }
+  document.getElementById('add').addEventListener('click', function(){
+    var n = (parseInt(get('extra')||'0',10)||0)+1;
+    addEntry(n, true);
+  });
+
+  function restore(root){
+    root.querySelectorAll('[data-key]').forEach(function(el){
+      var v = get(el.dataset.key);
+      if(v===null) return;
+      if(el.type==='checkbox') el.checked = (v==='1'); else el.textContent = v;
+    });
+  }
+  restore(document);
+
+  document.addEventListener('input', function(e){
+    var el = e.target; if(!el.dataset || !el.dataset.key) return;
+    set(el.dataset.key, el.textContent);
+  });
+  document.addEventListener('change', function(e){
+    var el = e.target;
+    if(el.type==='checkbox') set(el.dataset.key, el.checked?'1':'0');
+  });
+  // 붙여넣기는 서식 없이 텍스트만
+  document.addEventListener('paste', function(e){
+    if(!e.target.isContentEditable) return;
+    e.preventDefault();
+    var t = (e.clipboardData||window.clipboardData).getData('text');
+    document.execCommand('insertText', false, t);
+  });
+})();
+</script>
+</body>
+</html>
