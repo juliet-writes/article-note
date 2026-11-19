@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>기획카드</title>
+<style>
+  :root{
+    --bg:#faf7f2; --card:#ffffff; --ink:#2b2622; --muted:#8a8178;
+    --line:#e8e0d5; --accent:#a0553c; --accent-soft:#f4e6df;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+    line-height:1.7; -webkit-text-size-adjust:100%;
+    display:flex; align-items:center; justify-content:center; padding:20px 16px;
+  }
+  .card{
+    width:100%; max-width:560px; background:var(--card);
+    border:1px solid var(--line); border-radius:18px; overflow:hidden;
+    box-shadow:0 6px 24px rgba(60,40,20,.06);
+  }
+  .head{padding:22px 22px 18px; background:var(--accent-soft); border-bottom:1px solid var(--line)}
+  .tag{margin:0 0 6px; font-size:.78rem; font-weight:700; letter-spacing:.06em; color:var(--accent)}
+  .head h1{margin:0; font-size:1.25rem; line-height:1.5; letter-spacing:-.02em}
+  .row{padding:14px 22px; border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:0}
+  .label{margin:0 0 2px; font-size:.78rem; font-weight:700; color:var(--muted)}
+  .value{margin:0; word-break:keep-all}
+  .main{background:#fffaf6}
+  .main .label{color:var(--accent)}
+  .main .value{font-weight:700; font-size:1.05rem}
+  @media (min-width:600px){ .head h1{font-size:1.4rem} .row,.head{padding-left:28px; padding-right:28px} }
+</style>
+</head>
+<body>
+  <article class="card">
+    <div class="head">
+      <p class="tag">기획카드</p>
+      <h1>나는 글 쓸 때 기록이 정리되지 않아서 불편하다</h1>
+    </div>
+
+    <div class="row">
+      <p class="label">누가</p>
+      <p class="value">나 + 다른 작가들</p>
+    </div>
+
+    <div class="row">
+      <p class="label">지금은 어떻게 버티나</p>
+      <p class="value">구글독스에 여러 버전 저장</p>
+    </div>
+
+    <div class="row main">
+      <p class="label">이 페이지가 해 줄 한 가지</p>
+      <p class="value">버튼 하나로 소설 버전을 정리해서 저장한다.</p>
+      <p class="value" style="font-weight:400;font-size:1rem;margin-top:4px">그 밖에 설정, 캐릭터 등 정보 저장</p>
+    </div>
+
+    <div class="row">
+      <p class="label">필요한 것</p>
+      <p class="value">저장 / 실시간 / 내가 확정한 장소, 시간, 장면연출을 기록하고 언제나 불러올 수 있는 도구</p>
+    </div>
+  </article>
+</body>
+</html>
